@@ -18,7 +18,6 @@ A high-fidelity, retro 3D voxel-style developer portfolio built using React, Vit
 * A bespoke crafting grid interface where users must deploy three input blocks representing their **Name**, **Email**, and **Proposal** details into a crafting table slot to construct and submit a hire request.
 
 ### 4. Robust Full-Stack Backend Integration
-* **Express API Server**: Managed server running concurrently on port `5001` with request rate limiting and database connection fail-safes.
 * **MongoDB Lead Ledger**: Stores incoming proposals persistently via Mongoose schemas before dispatching alerts to prevent any lead loss.
 * **Real-time Telegram Alerts**: Connects securely to the Telegram Bot API using a modular dispatcher (`utils/telegram.js`) to push instant rich-text notification summaries directly to the developer's chat.
 * **Rate Limiting**: Configured `express-rate-limit` on the proposal API route to shield the endpoint from automated bots or spam floods.
