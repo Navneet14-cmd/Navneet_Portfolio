@@ -1,0 +1,6 @@
+{
+  "name": "Voxel Dev Portfolio",
+  "description": "A retro-voxel brutalist developer portfolio designed and built block by block.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

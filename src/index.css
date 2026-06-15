@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+html, body {
+  overscroll-behavior: none;
+  background-color: #111111;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+@theme {
+  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-press-start: "Press Start 2P", system-ui, sans-serif;
+
+  /* Voxel Color Palette */
+  --color-background: #f7fbef;
+  --color-surface: #f7fbef;
+  --color-surface-dim: #d7dcd0;
+  --color-surface-bright: #f7fbef;
+  --color-surface-container: #ebefe4;
+  --color-surface-container-low: #f1f5e9;
+  --color-surface-container-high: #e5eade;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #181d16;
+  --color-on-surface-variant: #40493c;
+  --color-inverse-surface: #2d322a;
+  --color-inverse-on-surface: #eef2e6;
+  --color-outline: #707a6a;
+  --color-outline-variant: #c0cab8;
+
+  --color-primary: #206d14;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #5aa748;
+  --color-on-primary-container: #033700;
+  --color-inverse-primary: #8ada74;
+
+  --color-secondary: #7b563a;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #ffcdaa;
+  --color-on-secondary-container: #7a5539;
+
+  --color-tertiary: #5e5e5e;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #959595;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+
+  --color-primary-fixed: #a5f78d;
+  --color-primary-fixed-dim: #8ada74;
+  --color-secondary-fixed: #ffdcc4;
+  --color-secondary-fixed-dim: #edbd9a;
+  --color-tertiary-fixed: #e3e2e2;
+  --color-tertiary-fixed-dim: #c7c6c6;
+
+  /* Custom blocks */
+  --color-stone: #7a7a7a;
+  --color-dirt: #866043;
+  --color-grass: #5aa748;
+  --color-cobblestone: #5e5e5e;
+  --color-oak: #ab8d59;
+  --color-parchment: #e3e2e2;
+  --color-bedrock: #111111;
+
+  --animate-ghast: ambient-float 45s ease-in-out infinite;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-bob: bob 5s ease-in-out infinite;
+  --animate-pulse-gentle: pulse-gentle 3s ease-in-out infinite;
+  --animate-shimmer: shimmer 4s infinite linear;
+}
+
+/* Custom styles for brutalist blocks */
+:root {
+  --block-border: 4px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #2d322a;
+}
+::-webkit-scrollbar-thumb {
+  background: #7a7a7a;
+  border: 3px solid #181d16;
+}
+
+/* Voxel Bevel blocks */
+.voxel-block {
+  border: var(--block-border) solid #181d16;
+  box-shadow: 
+    inset var(--block-border) var(--block-border) 0 rgba(255, 255, 255, 0.25),
+    inset calc(var(--block-border) * -1) calc(var(--block-border) * -1) 0 rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.voxel-button {
+  cursor: pointer;
+  border: var(--block-border) solid #181d16;
+  box-shadow: 
+    inset var(--block-border) var(--block-border) 0 rgba(255, 255, 255, 0.4),
+    inset calc(var(--block-border) * -1) calc(var(--block-border) * -1) 0 rgba(0, 0, 0, 0.6);
+  transition: all 0.075s;
+}
+
+.voxel-button:active {
+  transform: translateY(2px);
+  box-shadow: 
+    inset var(--block-border) var(--block-border) 0 rgba(0, 0, 0, 0.6),
+    inset calc(var(--block-border) * -1) calc(var(--block-border) * -1) 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Inventory HUD Slots */
+.inventory-slot:hover .tooltip {
+  display: block;
+}
+
+.inventory-slot:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px #ffffff);
+  z-index: 10;
+}
+
+/* Particles & Swirl Background */
+.ember-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.obsidian-particle {
+  position: absolute;
+  background-color: #2c0b4d;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.1), 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.nether-portal-bg { 
+  background: linear-gradient(135deg, #1a0033 0%, #4a148c 25%, #7b1fa2 50%, #4a148c 75%, #1a0033 100%); 
+  background-size: 400% 400%; 
+  animation: portal-swirl 15s ease infinite; 
+  position: absolute; 
+  inset: 0; 
+  z-index: 0; 
+  opacity: 0.4; 
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0px) rotate(2deg); }
+  50% { transform: translateY(-20px) rotate(-2deg); }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { 
+    transform: scale(1); 
+    box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.4), inset -4px -4px 0 rgba(0, 0, 0, 0.6); 
+  }
+  50% { 
+    transform: scale(1.03); 
+    box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.5), inset -4px -4px 0 rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.2); 
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes portal-swirl { 
+  0% { background-position: 0% 50%; } 
+  50% { background-position: 100% 50%; } 
+  100% { background-position: 0% 50%; } 
+}
+
+@keyframes ambient-float {
+  0% {
+    transform: translate(-300px, 10vh) scaleX(1);
+  }
+  45% {
+    transform: translate(110vw, 30vh) scaleX(1);
+  }
+  50% {
+    transform: translate(110vw, 30vh) scaleX(-1);
+  }
+  95% {
+    transform: translate(-300px, 50vh) scaleX(-1);
+  }
+  100% {
+    transform: translate(-300px, 10vh) scaleX(1);
+  }
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  background-size: 200% 100%;
+}
+
+/* Custom Minecraft pixel-art rendering */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Custom Minecraft Golden Sword Hover Cursor */
+a, 
+button, 
+[role="button"], 
+.cursor-pointer,
+#logo-brand,
+.inventory-slot {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'%3E%3Crect x='1' y='14' width='1' height='1' fill='%235889a2'/%3E%3Crect x='0' y='14' width='1' height='1' fill='%23000000'/%3E%3Crect x='1' y='15' width='1' height='1' fill='%23000000'/%3E%3Crect x='2' y='14' width='1' height='1' fill='%23000000'/%3E%3Crect x='1' y='13' width='1' height='1' fill='%23000000'/%3E%3Crect x='2' y='13' width='1' height='1' fill='%2353381a'/%3E%3Crect x='3' y='12' width='1' height='1' fill='%2353381a'/%3E%3Crect x='4' y='11' width='1' height='1' fill='%2353381a'/%3E%3Crect x='2' y='12' width='1' height='1' fill='%23000000'/%3E%3Crect x='3' y='13' width='1' height='1' fill='%23000000'/%3E%3Crect x='3' y='11' width='1' height='1' fill='%23000000'/%3E%3Crect x='4' y='12' width='1' height='1' fill='%23000000'/%3E%3Crect x='4' y='10' width='1' height='1' fill='%23000000'/%3E%3Crect x='5' y='11' width='1' height='1' fill='%23000000'/%3E%3Crect x='2' y='10' width='1' height='1' fill='%23000000'/%3E%3Crect x='2' y='9' width='1' height='1' fill='%23000000'/%3E%3Crect x='3' y='9' width='1' height='1' fill='%235889a2'/%3E%3Crect x='3' y='10' width='1' height='1' fill='%2388b5cc'/%3E%3Crect x='4' y='9' width='1' height='1' fill='%23000000'/%3E%3Crect x='6' y='13' width='1' height='1' fill='%23000000'/%3E%3Crect x='7' y='13' width='1' height='1' fill='%23000000'/%3E%3Crect x='7' y='12' width='1' height='1' fill='%235889a2'/%3E%3Crect x='6' y='12' width='1' height='1' fill='%2388b5cc'/%3E%3Crect x='7' y='11' width='1' height='1' fill='%23000000'/%3E%3Crect x='5' y='10' width='1' height='1' fill='%2353381a'/%3E%3Crect x='5' y='9' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='6' y='8' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='7' y='7' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='8' y='6' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='9' y='5' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='10' y='4' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='11' y='3' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='12' y='2' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='13' y='1' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='14' y='0' width='1' height='1' fill='%23fbca12'/%3E%3Crect x='6' y='9' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='7' y='8' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='8' y='7' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='9' y='6' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='10' y='5' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='11' y='4' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='12' y='3' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='13' y='2' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='14' y='1' width='1' height='1' fill='%23fdf396'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%23000000'/%3E%3Crect x='5' y='8' width='1' height='1' fill='%23000000'/%3E%3Crect x='5' y='7' width='1' height='1' fill='%23000000'/%3E%3Crect x='6' y='7' width='1' height='1' fill='%23000000'/%3E%3Crect x='6' y='6' width='1' height='1' fill='%23000000'/%3E%3Crect x='7' y='6' width='1' height='1' fill='%23000000'/%3E%3Crect x='7' y='5' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='5' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='10' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='10' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='11' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='11' y='1' width='1' height='1' fill='%23000000'/%3E%3Crect x='12' y='1' width='1' height='1' fill='%23000000'/%3E%3Crect x='12' y='0' width='1' height='1' fill='%23000000'/%3E%3Crect x='13' y='0' width='1' height='1' fill='%23000000'/%3E%3Crect x='6' y='10' width='1' height='1' fill='%23000000'/%3E%3Crect x='7' y='10' width='1' height='1' fill='%23000000'/%3E%3Crect x='7' y='9' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='9' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='8' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='7' width='1' height='1' fill='%23000000'/%3E%3Crect x='10' y='7' width='1' height='1' fill='%23000000'/%3E%3Crect x='10' y='6' width='1' height='1' fill='%23000000'/%3E%3Crect x='11' y='6' width='1' height='1' fill='%23000000'/%3E%3Crect x='11' y='5' width='1' height='1' fill='%23000000'/%3E%3Crect x='12' y='5' width='1' height='1' fill='%23000000'/%3E%3Crect x='12' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='13' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='13' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='14' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='14' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='15' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='15' y='1' width='1' height='1' fill='%23000000'/%3E%3Crect x='15' y='0' width='1' height='1' fill='%23000000'/%3E%3C/svg%3E") 28 0, pointer !important;
+}
