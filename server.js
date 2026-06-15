@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import rateLimit from "express-rate-limit";
 import { sendTelegramNotification } from "./utils/telegram.js";
@@ -7,18 +8,8 @@ import { sendTelegramNotification } from "./utils/telegram.js";
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-
-// Enable CORS for cross-origin deployments (e.g., frontend on Vercel/Netlify, backend on Render)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
 
 const PORT = process.env.PORT || 5001;
 const MONGODB_URI = process.env.MONGODB_URI;
