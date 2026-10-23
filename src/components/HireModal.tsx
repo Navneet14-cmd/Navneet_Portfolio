@@ -19,7 +19,8 @@ export const HireModal: React.FC<HireModalProps> = ({ onClose }) => {
     setError(null);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "";
+      const rawApiUrl = import.meta.env.VITE_API_URL || "";
+      const apiUrl = rawApiUrl.replace(/\/+$/, "");
       const response = await fetch(`${apiUrl}/api/hire`, {
         method: "POST",
         headers: {

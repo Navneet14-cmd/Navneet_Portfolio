@@ -19,10 +19,10 @@ if (!MONGODB_URI) {
   process.exit(1);
 }
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI)
+// Connect to MongoDB with a 5s timeout to avoid indefinite request hangs
+mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
   .then(() => console.log("Successfully connected to MongoDB database."))
-  .catch((err) => console.error("MongoDB connection exception:", err));
+  .catch((err) => console.error("MongoDB connection exception (check if cluster is paused in Atlas):", err.message));
 
 // MongoDB schema matching frontend fields plus metadata delivery flag
 const HireRequestSchema = new mongoose.Schema({
@@ -71,27 +71,51 @@ app.post("/api/hire", async (req, res) => {
   }
 
   try {
-    // 2. Save first (keeps lead even if Telegram API is down)
-    const requestDoc = new HireRequest({ name, email, proposal });
-    await requestDoc.save();
+    let dbSaved = false;
+    let requestDoc = null;
 
-    // 3. Notify second (triggers background notification)
-    const notificationSuccess = await sendTelegramNotification({ name, email, proposal });
-    
-    if (notificationSuccess) {
-      requestDoc.telegramSent = true;
+    // 2. Attempt saving to MongoDB
+    try {
+      requestDoc = new HireRequest({ name, email, proposal });
       await requestDoc.save();
+      dbSaved = true;
+      console.log("Proposal successfully saved to MongoDB.");
+    } catch (dbErr) {
+      console.error("MongoDB save skipped/failed (check if Atlas cluster is paused or needs resume):", dbErr.message);
     }
 
-    return res.status(201).json({
-      success: true,
-      message: "Proposal crafted and dispatched successfully!"
-    });
-  } catch (err) {
-    console.error("Error processing proposal submit:", err);
+    // 3. Always dispatch Telegram notification so leads are never missed!
+    const notificationSuccess = await sendTelegramNotification({ name, email, proposal });
+
+    if (dbSaved && notificationSuccess && requestDoc) {
+      try {
+        requestDoc.telegramSent = true;
+        await requestDoc.save();
+      } catch (flagErr) {
+        console.warn("Could not update telegramSent status in DB:", flagErr.message);
+      }
+    }
+
+    // If Telegram succeeded OR MongoDB saved the document, return success!
+    if (notificationSuccess || dbSaved) {
+      return res.status(201).json({
+        success: true,
+        message: "Proposal crafted and dispatched successfully!",
+        savedToDb: dbSaved,
+        telegramSent: notificationSuccess
+      });
+    }
+
+    // If both failed, notify client to try direct contact
     return res.status(500).json({
       success: false,
-      error: "Internal server validation block. Failed to save contract proposal."
+      error: "Failed to dispatch proposal redstone signal. Please reach out via email or LinkedIn."
+    });
+  } catch (err) {
+    console.error("Unexpected error processing proposal submit:", err);
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error. Failed to craft contract proposal."
     });
   }
 });
