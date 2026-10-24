@@ -29,8 +29,22 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
   const [lightboxImage, setLightboxImage] = useState<{ src: string; caption: string } | null>(null);
   const [lightboxRotation, setLightboxRotation] = useState<number>(0);
   const [lightboxZoom, setLightboxZoom] = useState<number>(1);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
   const modalRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 1024;
+  const mobileCardWidth = Math.min(290, Math.max(260, windowWidth - 76));
+  const cardWidth = isMobile ? mobileCardWidth : 340;
+  const cardHeight = isMobile ? Math.round(mobileCardWidth * 1.35) : 460;
 
   const hasSubCards = Boolean(achievement?.subCards && achievement.subCards.length > 0);
 
@@ -174,7 +188,7 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
         aria-modal="true"
         aria-labelledby="modal-achievement-title"
         onClick={onClose}
-        className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 pt-20 md:pt-24 pb-8 overflow-y-auto overscroll-contain"
+        className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md flex justify-center items-start md:items-center p-2.5 sm:p-6 pt-16 md:pt-24 pb-4 sm:pb-8 overflow-y-auto overscroll-contain"
         style={{ overscrollBehavior: "contain" }}
       >
         {/* Minecraft Parchment / Tome Modal Container */}
@@ -183,7 +197,7 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
           onClick={(e) => e.stopPropagation()}
           className={`w-full ${
             hasSubCards ? "max-w-6xl" : "max-w-5xl"
-          } bg-[#424242] border-4 border-[#121610] text-[#121610] voxel-block flex flex-col max-h-[calc(100vh-6.5rem)] overflow-hidden shadow-2xl relative transition-all duration-200 overscroll-contain`}
+          } bg-[#424242] border-4 border-[#121610] text-[#121610] voxel-block flex flex-col my-auto max-h-[calc(100dvh-4.5rem)] md:max-h-[calc(100vh-6.5rem)] overflow-hidden shadow-2xl relative transition-all duration-200 overscroll-contain`}
           style={{
             boxShadow:
               "inset 4px 4px 0px rgba(255, 255, 255, 0.25), inset -4px -4px 0px rgba(0, 0, 0, 0.7), 0 16px 48px rgba(0, 0, 0, 0.8)",
@@ -216,8 +230,8 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
           {hasSubCards ? (
             /* Multi-SubCard Showcase View (3 FlipCards, clean small headings, NO long text wall) */
             <div
-              className="flex-grow overflow-y-auto bg-[#181d16] p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-6 overscroll-contain"
-              style={{ overscrollBehavior: "contain" }}
+              className="flex-grow min-h-0 overflow-y-auto bg-[#181d16] p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-6 overscroll-contain"
+              style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
             >
               {/* Clean Top Header Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#22281e] p-4 border-4 border-[#121610] text-white">
@@ -482,13 +496,12 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
           ) : (
             /* Standard 2-Column Split View for regular single-item achievements */
             <div
-              className="flex-grow overflow-y-auto grid grid-cols-1 lg:grid-cols-12 bg-[#dbd1b4] p-5 md:p-8 gap-6 text-[#181d16] font-sans overscroll-contain"
-              style={{ overscrollBehavior: "contain" }}
+              className="flex-grow min-h-0 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 bg-[#dbd1b4] p-4 sm:p-6 md:p-8 gap-5 md:gap-6 text-[#181d16] font-sans pb-10"
+              style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
             >
               {/* Left Column: Achievement Narrative & Milestones (6 cols) */}
               <div
-                className="lg:col-span-6 flex flex-col justify-between space-y-5 bg-[#ede4cb] p-5 border-4 border-[#121610] shadow-inner overscroll-contain"
-                style={{ overscrollBehavior: "contain" }}
+                className="lg:col-span-6 flex flex-col justify-between space-y-5 bg-[#ede4cb] p-4 sm:p-5 border-4 border-[#121610] shadow-inner"
               >
                 <div className="space-y-4">
                   {/* Category & Date Pill */}
@@ -504,6 +517,23 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                       <Calendar className="w-3.5 h-3.5 text-[#53381a]" />
                       {achievement.date}
                     </span>
+                  </div>
+
+                  {/* Mobile Quick Jump to 3D Card */}
+                  <div className="lg:hidden flex items-center justify-between bg-[#dfd4b7] p-2 border-2 border-[#121610]/30 -mt-1">
+                    <span className="font-mono text-[11px] text-[#2d322a] font-bold">
+                      Interactive 3D Card
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        document.getElementById("modal-flip-card-section")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="px-2.5 py-1 bg-[#3c8527] hover:bg-[#4c9e33] text-white font-mono text-[11px] font-bold border border-[#121610] flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 transition-transform"
+                    >
+                      <span>View Card Below</span>
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
                   {/* Title & Organization */}
@@ -586,7 +616,10 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
               </div>
 
               {/* Right Column: 3D FlipCard Interactive Showcase (6 cols) */}
-              <div className="lg:col-span-6 flex flex-col items-center justify-between bg-[#111318] border-4 border-[#121610] text-white p-5 overflow-hidden relative">
+              <div
+                id="modal-flip-card-section"
+                className="lg:col-span-6 flex flex-col items-center justify-between bg-[#111318] border-4 border-[#121610] text-white p-3.5 sm:p-5 overflow-hidden relative"
+              >
                 {/* Top Hints & Side Indicator */}
                 <div className="w-full flex items-center justify-between pb-3 border-b-2 border-zinc-800 text-xs font-mono">
                   <div className="flex items-center gap-1.5 text-[#8CE99A] font-bold">
@@ -604,12 +637,12 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                 </div>
 
                 {/* 3D FlipCard with Aspect-Fitting (Zero Cropping!) */}
-                <div className="py-6 flex items-center justify-center w-full">
+                <div className="py-3 sm:py-6 flex items-center justify-center w-full">
                   <FlipCard
                     flipped={isFlipped}
                     onFlipChange={setIsFlipped}
-                    width={340}
-                    height={460}
+                    width={cardWidth}
+                    height={cardHeight}
                     radius={12}
                     perspective={1000}
                     hoverScale={1.02}
@@ -782,6 +815,19 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                   >
                     <RotateCw className="w-3.5 h-3.5" />
                     <span>{isFlipped ? "Flip to Front" : "Flip to Back"}</span>
+                  </button>
+                </div>
+
+                {/* Mobile Jump Back to Overview */}
+                <div className="lg:hidden w-full flex items-center justify-center pt-3 border-t border-zinc-800">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      document.getElementById("modal-achievement-title")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="px-3 py-1 bg-[#1e231b] hover:bg-[#283024] text-[#8CE99A] font-mono text-[11px] font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
+                  >
+                    <span>↑ Back to Quest Overview</span>
                   </button>
                 </div>
               </div>
