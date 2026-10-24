@@ -11,7 +11,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenHireModal }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["hero", "about", "skills", "projects", "experience"];
+      const sections = ["hero", "about", "skills", "projects", "achievements", "experience"];
       let currentSection = "hero";
 
       for (const section of sections) {
@@ -54,11 +54,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenHireModal }) => {
     { id: "about", label: "About" },
     { id: "skills", label: "Skills" },
     { id: "projects", label: "Projects" },
+    { id: "achievements", label: "Achievements" },
     { id: "experience", label: "Experience" },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-3 bg-[#1b221a]/90 backdrop-blur-md border-b-4 border-[#121610]">
+    <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-3 bg-[#131a12]/60 backdrop-blur-md border-b border-[#8ada74]/15 shadow-[0_4px_20px_rgba(0,0,0,0.35)] transition-colors duration-200">
       <div
         id="logo-brand"
         onClick={() => scrollToSection("hero")}
@@ -81,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenHireModal }) => {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className={`font-mono text-sm leading-none uppercase px-3 py-2 transition-colors duration-150 font-bold tracking-wider ${isActive
-                  ? "text-white"
+                  ? "text-white border-b-2 border-[#8ada74]"
                   : "text-[#8ada74] hover:text-white"
                 }`}
               style={{
@@ -119,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenHireModal }) => {
 
       {/* Mobile Dropdown Panel */}
       {mobileMenuOpen && (
-        <div id="mobile-nav-panel" className="absolute top-[100%] left-0 w-full bg-surface dark:bg-inverse-surface border-b-4 border-on-surface flex flex-col p-4 space-y-3 md:hidden z-40 shadow-xl">
+        <div id="mobile-nav-panel" className="absolute top-[100%] left-0 w-full bg-[#131a12]/85 backdrop-blur-md border-b-2 border-[#8ada74]/20 flex flex-col p-4 space-y-3 md:hidden z-40 shadow-2xl">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -128,8 +129,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenHireModal }) => {
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
                 className={`font-mono text-left text-sm uppercase px-4 py-2 transition-all ${isActive
-                  ? "bg-secondary-container text-on-secondary-container font-bold border-l-4 border-primary"
-                  : "text-on-surface-variant hover:bg-surface-container"
+                  ? "bg-[#253523] text-[#8ada74] font-bold border-l-4 border-[#8ada74]"
+                  : "text-zinc-300 hover:bg-[#253523] hover:text-white"
                   }`}
               >
                 {item.label}
@@ -142,9 +143,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenHireModal }) => {
               setMobileMenuOpen(false);
               onOpenHireModal();
             }}
-            className="voxel-button w-full bg-primary text-on-primary py-3 font-mono text-sm uppercase"
+            className="voxel-button w-full bg-[#3c8527] hover:bg-[#4c9e33] text-white py-3 font-mono text-sm uppercase border-2 border-[#121610]"
             style={{
-              boxShadow: "rgba(255, 255, 255, 0.4) 4px 4px 0px inset, rgba(0, 0, 0, 0.6) -4px -4px 0px inset",
+              boxShadow: "inset 4px 4px 0px #72cc50, inset -4px -4px 0px #215114",
             }}
           >
             Hire Me

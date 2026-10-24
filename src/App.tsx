@@ -10,6 +10,7 @@ import { Footer } from "./components/Footer";
 import { HireModal } from "./components/HireModal";
 import { GameSimulator } from "./components/GameSimulator";
 import { Project } from "./types";
+import CRTWarp from "./components/CRTWarp";
 
 export default function App() {
   const [hireModalOpen, setHireModalOpen] = useState(false);
@@ -34,15 +35,49 @@ export default function App() {
   return (
     <div className="bg-[#111111] text-on-surface font-sans overflow-x-hidden min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
       
-      {/* Fixed Background Image and Dark Overlay Layer for smooth GPU-accelerated scrolling */}
+      {/* Minecraft Overworld Background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Authentic Minecraft scenery wallpaper */}
         <div 
-          className="w-full h-full bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url('/assets/home_bg.png')",
           }}
         />
-        <div className="absolute inset-0 bg-black/40 z-10" />
+
+        {/* Subtle CRT Warp Scanline & Curvature Layer (retro arcade monitor effect over Minecraft scenery) */}
+        <div className="absolute inset-0 mix-blend-screen opacity-15">
+          <CRTWarp
+            color="#8ada74"
+            backgroundColor="#000000"
+            speed={0.12}
+            columns={80}
+            levels={4}
+            waveAmplitude={0.06}
+            waveFrequency={1.4}
+            persistence={0.7}
+            curvature={0.03}
+            corners={0}
+            scanlineStrength={0.25}
+            scanlineFrequency={260}
+            mask="aperture"
+            maskStrength={0.12}
+            bloom={0.6}
+            bloomRadius={1.0}
+            noise={0.02}
+            vignette={0.4}
+            brightness={0.8}
+            intro={false}
+            mouseReact={true}
+            mouseStrength={0.15}
+            changeOnClick={false}
+            dpr={1.5}
+            fps={45}
+          />
+        </div>
+
+        {/* Dark woodland overlay for readability and contrast */}
+        <div className="absolute inset-0 bg-black/45" />
       </div>
 
       {/* Fixed Ambient Floating Ghast element, floating diagonally across the screen */}
@@ -68,7 +103,7 @@ export default function App() {
         <Hero onExploreClick={scrollToAboutSection} />
 
         {/* Biographic Book Parchment Section */}
-        <About />
+        <About onOpenHireModal={() => setHireModalOpen(true)} />
 
         {/* 9x3 grid Minecraft inventory Armor/Tools setup */}
         <Skills />
@@ -76,11 +111,11 @@ export default function App() {
         {/* Brutalist Cobblestone Select projects lists */}
         <Projects onPlayProject={(project) => setActiveProject(project)} />
 
+        {/* Collectible Minecraft Achievements & Milestones section */}
+        <Achievements />
+
         {/* Deep mineshaft timeline chart */}
         <Experience />
-
-        {/* Achievements / Advancement made badges */}
-        <Achievements />
 
       </main>
 

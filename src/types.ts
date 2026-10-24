@@ -1,11 +1,14 @@
 export interface Project {
   id: string;
   title: string;
+  category?: string;
   description: string;
   thumbnail: string;
   tags: string[];
   playMessage: string;
   gameType: "pipeline" | "plume" | "archives";
+  codeLabel?: string;
+  githubUrl?: string;
 }
 
 export interface SkillItem {
