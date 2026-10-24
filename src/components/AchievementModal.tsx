@@ -42,7 +42,7 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
   }, []);
 
   const isMobile = windowWidth < 1024;
-  const mobileCardWidth = Math.min(290, Math.max(260, windowWidth - 76));
+  const mobileCardWidth = Math.min(280, Math.max(250, windowWidth - 76));
   const cardWidth = isMobile ? mobileCardWidth : 340;
   const cardHeight = isMobile ? Math.round(mobileCardWidth * 1.35) : 460;
 
@@ -499,9 +499,10 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
               className="flex-grow min-h-0 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 bg-[#dbd1b4] p-4 sm:p-6 md:p-8 gap-5 md:gap-6 text-[#181d16] font-sans pb-10"
               style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
             >
-              {/* Left Column: Achievement Narrative & Milestones (6 cols) */}
+              {/* Left Column: Achievement Narrative & Milestones (order-2 on mobile so 3D card is shown first!) */}
               <div
-                className="lg:col-span-6 flex flex-col justify-between space-y-5 bg-[#ede4cb] p-4 sm:p-5 border-4 border-[#121610] shadow-inner"
+                id="modal-quest-narrative-section"
+                className="order-2 lg:order-1 lg:col-span-6 flex flex-col justify-between space-y-5 bg-[#ede4cb] p-4 sm:p-5 border-4 border-[#121610] shadow-inner"
               >
                 <div className="space-y-4">
                   {/* Category & Date Pill */}
@@ -519,10 +520,10 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                     </span>
                   </div>
 
-                  {/* Mobile Quick Jump to 3D Card */}
+                  {/* Mobile Return to Card Pill */}
                   <div className="lg:hidden flex items-center justify-between bg-[#dfd4b7] p-2 border-2 border-[#121610]/30 -mt-1">
                     <span className="font-mono text-[11px] text-[#2d322a] font-bold">
-                      Interactive 3D Card
+                      Quest Details & Impact
                     </span>
                     <button
                       type="button"
@@ -531,7 +532,7 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                       }}
                       className="px-2.5 py-1 bg-[#3c8527] hover:bg-[#4c9e33] text-white font-mono text-[11px] font-bold border border-[#121610] flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 transition-transform"
                     >
-                      <span>View Card Below</span>
+                      <span>↑ Back to 3D Card</span>
                       <Eye className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -613,12 +614,25 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                     </a>
                   </div>
                 )}
+
+                {/* Mobile Jump Back to Card */}
+                <div className="lg:hidden pt-3 border-t-2 border-[#121610]/20 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      document.getElementById("modal-flip-card-section")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="py-1.5 px-4 font-mono text-[11px] font-bold text-white bg-[#3c8527] hover:bg-[#4c9e33] border-2 border-[#121610] flex items-center gap-1.5 transition-all cursor-pointer shadow active:scale-95"
+                  >
+                    <span>↑ Back to 3D Interactive Card</span>
+                  </button>
+                </div>
               </div>
 
-              {/* Right Column: 3D FlipCard Interactive Showcase (6 cols) */}
+              {/* Right Column: 3D FlipCard Interactive Showcase (order-1 on mobile so it displays directly at the top!) */}
               <div
                 id="modal-flip-card-section"
-                className="lg:col-span-6 flex flex-col items-center justify-between bg-[#111318] border-4 border-[#121610] text-white p-3.5 sm:p-5 overflow-hidden relative"
+                className="order-1 lg:order-2 lg:col-span-6 flex flex-col items-center justify-between bg-[#111318] border-4 border-[#121610] text-white p-3.5 sm:p-5 relative min-h-[480px] sm:min-h-[520px] flex-shrink-0"
               >
                 {/* Top Hints & Side Indicator */}
                 <div className="w-full flex items-center justify-between pb-3 border-b-2 border-zinc-800 text-xs font-mono">
@@ -630,14 +644,25 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                         : "Side 1: Primary Showcase"}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-zinc-400 text-[11px]">
-                    <Hand className="w-3 h-3 text-[#ffd700]" />
-                    <span className="hidden sm:inline">Drag or click to flip</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        document.getElementById("modal-quest-narrative-section")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="lg:hidden px-2 py-0.5 bg-[#252c22] hover:bg-[#343e30] text-[#8CE99A] font-mono text-[10px] font-bold border border-[#3c8527] flex items-center gap-1 cursor-pointer active:scale-95"
+                    >
+                      <span>Read Details ↓</span>
+                    </button>
+                    <div className="hidden sm:flex items-center gap-1 text-zinc-400 text-[11px]">
+                      <Hand className="w-3 h-3 text-[#ffd700]" />
+                      <span>Drag or click to flip</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* 3D FlipCard with Aspect-Fitting (Zero Cropping!) */}
-                <div className="py-3 sm:py-6 flex items-center justify-center w-full">
+                {/* 3D FlipCard with Aspect-Fitting (Zero Cropping & Guaranteed Min Height!) */}
+                <div className="py-2 sm:py-6 flex items-center justify-center w-full min-h-[380px]">
                   <FlipCard
                     flipped={isFlipped}
                     onFlipChange={setIsFlipped}
@@ -818,16 +843,16 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ achievement,
                   </button>
                 </div>
 
-                {/* Mobile Jump Back to Overview */}
+                {/* Mobile Jump Down to Overview */}
                 <div className="lg:hidden w-full flex items-center justify-center pt-3 border-t border-zinc-800">
                   <button
                     type="button"
                     onClick={() => {
-                      document.getElementById("modal-achievement-title")?.scrollIntoView({ behavior: "smooth" });
+                      document.getElementById("modal-quest-narrative-section")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="px-3 py-1 bg-[#1e231b] hover:bg-[#283024] text-[#8CE99A] font-mono text-[11px] font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
+                    className="px-3 py-1.5 bg-[#1e231b] hover:bg-[#283024] text-[#8CE99A] font-mono text-[11px] font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
                   >
-                    <span>↑ Back to Quest Overview</span>
+                    <span>Read Full Overview & Accomplishments ↓</span>
                   </button>
                 </div>
               </div>
